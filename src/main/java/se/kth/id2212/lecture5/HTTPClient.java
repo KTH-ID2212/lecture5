@@ -8,16 +8,19 @@ import java.nio.channels.SocketChannel;
 import java.nio.channels.WritableByteChannel;
 
 public class HTTPClient {
-    public static final String GET_REQUEST = "GET / HTTP/1.0\n\n";
+    public static final String GET_REQUEST = "GET / HTTP/1.1\n";
 
     public static void main(String[] args) {
         String host = (args.length > 0) ? args[0] : "www.kth.se";
+        String hostHeader = "Host: " + host + "\n\n";
         int port = (args.length > 1) ? Integer.parseInt(args[1]) : 80;
         WritableByteChannel out = Channels.newChannel(System.out);
         try {
             SocketChannel channel = SocketChannel.open(new InetSocketAddress(
                     host, port));
             ByteBuffer buf = ByteBuffer.wrap(GET_REQUEST.getBytes());
+            channel.write(buf);
+            buf = ByteBuffer.wrap(hostHeader.getBytes());
             channel.write(buf);
             buf = ByteBuffer.allocate(1024);
             while (buf.hasRemaining() && channel.read(buf) != -1) {
