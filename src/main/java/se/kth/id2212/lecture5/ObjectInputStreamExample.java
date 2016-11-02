@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class ObjectInputStreamExample {
 
-    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         String fileName = "list.ser";
         List<Integer> numbers;
@@ -24,8 +23,7 @@ public class ObjectInputStreamExample {
                 System.out.println("No " + number);
             }
         } catch (FileNotFoundException e) {
-            System.err.
-                    println("file " + fileName + " is mising");
+            System.err.println("file " + fileName + " is mising");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

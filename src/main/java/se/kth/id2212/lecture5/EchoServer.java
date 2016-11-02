@@ -52,13 +52,8 @@ public class EchoServer {
     private void serve() throws IOException {
         while (true) {
             selector.select();
-            Iterator<SelectionKey> keys = selector.selectedKeys()
-                    .iterator();
-
-            while (keys.hasNext()) {
-                SelectionKey key = keys.next();
-                keys.remove();
-
+            for (SelectionKey key : selector.selectedKeys()) {
+                selector.selectedKeys().remove(key);
                 if (key.isAcceptable()) {
                     acceptConnection(key);
                 } else if (key.isReadable()) {
@@ -76,7 +71,7 @@ public class EchoServer {
         SocketChannel channel = server.accept();
         channel.configureBlocking(false);
         channel.register(selector, SelectionKey.OP_READ,
-                ByteBuffer.allocate(MAX_MSG_LENGTH));
+                         ByteBuffer.allocate(MAX_MSG_LENGTH));
 
     }
 
@@ -85,7 +80,7 @@ public class EchoServer {
         ByteBuffer buffer = (ByteBuffer) key.attachment();
         channel.read(buffer);
         key.interestOps(SelectionKey.OP_READ
-                | SelectionKey.OP_WRITE);
+                        | SelectionKey.OP_WRITE);
     }
 
     private void writeToClient(SelectionKey key) throws IOException {
